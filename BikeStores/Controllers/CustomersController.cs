@@ -34,28 +34,31 @@ namespace BikeStores.Controllers
 
         // GET: api/Customers/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<GetCustomerDto>> GetCustomer(int id)
+        public async Task<ActionResult<TestDto>> GetCustomer(int id)
         {
           if (_context.Customers == null)
           {
               return NotFound();
           }
-            var customer = await _context.Customers.Include(o => o.Orders)
-                .ThenInclude(oi => oi.OrderItems).ThenInclude(p => p.Product)
-                .FirstOrDefaultAsync(o=> o.CustomerId == id);
 
-            if (customer == null)
+
+            List<TestDto> customer1 = await (from c in _context.Customers
+                            join o in _context.Orders
+                            on c.CustomerId equals o.CustomerId
+                            where c.CustomerId == id
+                            select new TestDto
+                            {
+                                FirstName = c.FirstName,
+                                LastName = c.LastName,
+                                OrderStatus = o.OrderStatus,
+                                OrderDate = o.OrderDate,
+                            }).ToListAsync();
+
+            if (!customer1.Any())
             {
                 return NotFound();
             }
-            var customerDto = new GetCustomerDto()
-            {
-                FirstName = customer.FirstName,
-                LastName = customer.LastName,
-                Phone = customer.Phone,
-                Email = customer.Email
-            };
-            return customerDto;
+            return Ok(customer1);
         }
 
         // PUT: api/Customers/5
