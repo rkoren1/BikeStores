@@ -34,7 +34,7 @@ namespace BikeStores.Controllers
 
         // GET: api/Customers/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<TestDto>> GetCustomer(int id)
+        public async Task<ActionResult<GetCustomerDto>> GetCustomer(int id)
         {
           if (_context.Customers == null)
           {
@@ -42,11 +42,11 @@ namespace BikeStores.Controllers
           }
 
 
-            List<TestDto> customer1 = await (from c in _context.Customers
+            List<GetCustomerDto> customer1 = await (from c in _context.Customers
                             join o in _context.Orders
                             on c.CustomerId equals o.CustomerId
                             where c.CustomerId == id
-                            select new TestDto
+                            select new GetCustomerDto
                             {
                                 FirstName = c.FirstName,
                                 LastName = c.LastName,
