@@ -1,3 +1,3 @@
 # BikeStores
 
-Code first Web API project.
+Database first Web API project.
